@@ -3,16 +3,23 @@ package com.example.model;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class Bolo extends Recebedor{
+public class Bolo extends Recebedor {
 
-    private double tetoFonteTotal = 0;
-    private double tetoTrabalhoTotal = 0;
-    private double restoParaDivisao = 0;
+    private double acumuladoTetoFonte = 0;
+    private double acumuladoTetoTrabalho = 0;
+    private double acumuladoParaDivisao = 0;
+    @Setter
+    private double retiradaAuxiliar = 0;
 
-    public void subtraiParaResto(double valor) {
-        restoParaDivisao -= valor;
+    public void addRetiradaAuxiliar(double valor) {
+        retiradaAuxiliar += valor;
+    }
+
+    public void subtraiDoAcumuladoParaDivisao(double valor) {
+        acumuladoParaDivisao -= valor;
     }
 
     public Bolo(String nome) {
@@ -20,35 +27,37 @@ public class Bolo extends Recebedor{
     }
 
     @Override
-    public void addEntrada(double valor) {
-        super.addEntrada(valor);
-        restoParaDivisao += valor;
+    public void addBruto(double valor) {
+        super.addBruto(valor);
+        acumuladoParaDivisao += valor;
     }
 
     public void calculaPercentual(List<Trabalhador> trabalhadores) {
         for (Trabalhador trabalhador : trabalhadores) {
             if (trabalhador.getTrabalho().equals(this)) {
-                tetoTrabalhoTotal += trabalhador.getTeto() - trabalhador.getEntrada();
-                // System.out.println("tetoTrabalhoTotal: " + tetoTrabalhoTotal);
+                acumuladoTetoTrabalho += trabalhador.getTeto() - trabalhador.getBruto();
+                // System.out.println("acumuladoTetoTrabalho: " + acumuladoTetoTrabalho);
             }
             if (trabalhador.getFonte().equals(this)) {
-                tetoFonteTotal += trabalhador.getTeto() - trabalhador.getEntrada();
-                System.out.println("tetoFonteTotal: " + tetoFonteTotal);
+                acumuladoTetoFonte += trabalhador.getTeto() - trabalhador.getBruto();
+                // System.out.println("acumuladoTetoFonte: " + acumuladoTetoFonte);
             }
         }
         for (Trabalhador trabalhador : trabalhadores) {
             if (trabalhador.getTrabalho().equals(this)) {
-                trabalhador.setPercentualTrabalho(tetoTrabalhoTotal);
+                trabalhador.setPercentualTrabalho(acumuladoTetoTrabalho);
             }
             if (trabalhador.getFonte().equals(this)) {
-                trabalhador.setPercentualFonte(tetoFonteTotal);
+                trabalhador.setPercentualFonte(acumuladoTetoFonte);
             }
         }
     }
 
-
     @Override
     public String toString() {
-        return super.toString() + ", tetoTrabalho: " + String.format("%.2f", tetoTrabalhoTotal) + ", tetoFonte: " + String.format("%.2f", tetoFonteTotal);
+        return super.toString()
+        // + ", acumuladoTetoOndeAtua: " + String.format("%.2f", acumuladoTetoTrabalho)
+        // + ", acumuladoTetoFonte: " + String.format("%.2f", acumuladoTetoFonte)
+        ;
     }
 }
