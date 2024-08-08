@@ -9,7 +9,6 @@ public class Recebedor {
 
     private String nome;
     private double bruto = 0;
-    // private double restoParaDivisao = 0;
 
     public Recebedor(String nome) {
         this.nome = nome;
@@ -17,7 +16,6 @@ public class Recebedor {
 
     public void addBruto(double valor) {
         bruto += valor;
-        // restoParaDivisao += valor;
     }
 
     @Override
