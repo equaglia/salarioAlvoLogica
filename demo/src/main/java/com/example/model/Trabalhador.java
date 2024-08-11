@@ -28,7 +28,7 @@ public class Trabalhador extends Recebedor {
     @Override
     public void addBruto(double valor) {
         double acumulado = getBruto() + valor;
-        if (acumulado > teto) {
+        if (acumulado > teto) { // o excedente do teto é acumulado para o proximo mes
             setBruto(teto);
             addAcumuladoMesSeguinte(acumulado - teto);
         } else {

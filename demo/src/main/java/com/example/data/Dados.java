@@ -30,7 +30,8 @@ public class Dados {
                 , new Trabalhador("Miguel", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(2), bolos.get(2)) // 8
                 , new Trabalhador("Iago", CategoriaTrabalho.INTEGRAL, 4000, 0, bolos.get(0), bolos.get(0)) // 9
                 , new Trabalhador("Lucas", CategoriaTrabalho.PARCIAL, 2000, 0, bolos.get(0), bolos.get(0)) // 10
-                // , new Trabalhador("Sílvio", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(2), bolos.get(2)) // 11
+                , new Trabalhador("Sílvio", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(2), bolos.get(2)) // 11
+                , new Trabalhador("Vanda", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(1), bolos.get(1)) // 12
                 );
     }
 
