@@ -32,17 +32,17 @@ public class SalarioService {
      * @param doacoes
      */
     private void direcionaDoacoesAosRecebedores(List<Doacao> doacoes) {
-        for (Doacao doacao : doacoes) {
-            doacao.getRecebedor().addBruto(doacao.getValor());
-        }
+        doacoes.forEach(doacao -> doacao.getRecebedor().addBruto(doacao.getValor()));
     }
 
     /**
      * Busca garantir o minimo para cada trabalhador
      * 
-     * Se o trabalhador não atingiu o seu mínimo com suas doacoes pessoais, 
-     * a parcela que falta é transferida do bolo da cidade em que atua para o trabalhador.
-     * Se ainda não atingiu o mínimo, a parcela que falta é transferida do bolo da cidade fonte para o trabalhador.
+     * Se o trabalhador não atingiu o seu mínimo com suas doacoes pessoais,
+     * a parcela que falta é transferida do bolo da cidade em que atua para o
+     * trabalhador.
+     * Se ainda não atingiu o mínimo, a parcela que falta é transferida do bolo da
+     * cidade fonte para o trabalhador.
      * Se ainda assim não atingir o mínimo, o sistema gera mensagem de alerta
      * 
      * @param bolos
@@ -50,35 +50,31 @@ public class SalarioService {
      */
     private void garanteOMinimoParaCadaTrabalhador(List<Bolo> bolos, List<Trabalhador> trabalhadores) {
 
-        for (Trabalhador trabalhador : trabalhadores) {
+        trabalhadores.forEach(trabalhador -> {
             double minimo = Math.max(0, trabalhador.getMinimo() - trabalhador.getBruto());
             if (minimo > 0) {
                 for (Bolo bolo : bolos) {
                     double resto = bolo.getAcumuladoParaDivisao();
                     if (trabalhador.getTrabalho().equals(bolo)) {
                         if (resto > minimo) {
-                            trabalhador.addBruto(minimo);
-                            bolo.subtraiDoAcumuladoParaDivisao(minimo);
+                            transfereDoBoloParaTrabalhador(trabalhador, minimo, bolo);
                             minimo = 0;
                             resto = bolo.getAcumuladoParaDivisao();
                             break;
                         } else {
-                            trabalhador.addBruto(resto);
-                            bolo.subtraiDoAcumuladoParaDivisao(resto);
+                            transfereDoBoloParaTrabalhador(trabalhador, resto, bolo);
                             minimo -= resto;
                             resto = bolo.getAcumuladoParaDivisao();
                         }
                     }
                     if (trabalhador.getFonte().equals(bolo)) {
                         if (resto > minimo) {
-                            trabalhador.addBruto(minimo);
-                            bolo.subtraiDoAcumuladoParaDivisao(minimo);
+                            transfereDoBoloParaTrabalhador(trabalhador, minimo, bolo);
                             minimo = 0;
                             resto = bolo.getAcumuladoParaDivisao();
                             break;
                         } else {
-                            trabalhador.addBruto(resto);
-                            bolo.subtraiDoAcumuladoParaDivisao(resto);
+                            transfereDoBoloParaTrabalhador(trabalhador, resto, bolo);
                             minimo -= resto;
                             resto = bolo.getAcumuladoParaDivisao();
                         }
@@ -89,98 +85,111 @@ public class SalarioService {
                             + trabalhador.getNome());
                 }
             }
-        }
+        });
+    }
+
+    private void transfereDoBoloParaTrabalhador(Trabalhador trabalhador, double minimo, Bolo bolo) {
+        trabalhador.addBruto(minimo);
+        bolo.subtraiDoAcumuladoParaDivisao(minimo);
     }
 
     /**
      * Calcula o percentual de cada trabalhador em cada bolo
      * 
-     * Para os trabalhadores que não atingiram o seu teto, estes deverão ter os salários
-     * complementados com a divisão dos valores restantes dos bolos aos quais fazem parte:
+     * Para os trabalhadores que não atingiram o seu teto, estes deverão ter os
+     * salários complementados com a divisão dos valores restantes dos bolos aos
+     * quais fazem
+     * parte:
      * - primeiro do bolo trabalho: cidade onde atua
-     * - depois do bolo fonte: cidade que enviou e que garante o sustento do trabalhador
+     * - depois do bolo fonte: cidade que enviou e que garante o sustento do
+     * trabalhador
      * 
-     * A divisão dos bolos é feita de acordo com o percentual de cada trabalhador em cada bolo,
-     * sendo considerado o que falta para completar o teto do trabalhador
+     * A divisão dos bolos é feita de acordo com o percentual de cada trabalhador em
+     * cada bolo, sendo considerado o que falta para completar o teto do trabalhador
      * 
      * Por exemplo:
      * - trabalhador 1: bruto = 1000, teto = 2000, falta = 1000
      * - trabalhador 2: bruto = 1000, teto = 4000, falta = 3000
-     * Nessa configuração, o trabalhador 1 tera direito a 25% 
+     * Nessa configuração, o trabalhador 1 tera direito a 25%
      * e o trabalhador 2 tera direito a 75% do bolo correspondente
-     *  
+     * 
      * @param bolos
      * @param trabalhadores
      */
     private void calculaPercentualDeCadaTrabalhadorEmCadaBolo(List<Bolo> bolos, List<Trabalhador> trabalhadores) {
-        for (Bolo bolo : bolos) {
+
+        bolos.forEach(bolo -> {
             bolo.calculaPercentual(trabalhadores);
             System.out.println(bolo);
-        }
+        });
     }
 
     /**
-     * Transfere do bolo da cidade ONDE TRABALHA para o trabalhador, de acordo ccm o percentual
+     * Transfere do bolo da cidade ONDE TRABALHA para o trabalhador, de acordo ccm o
+     * percentual
      * calculado para o trabalhador
-     *  
+     * 
      * @param bolos
      * @param trabalhadores
      */
     private void transfereDoBoloDaCidadeDeTRABALHOParaTrabalhador(List<Bolo> bolos, List<Trabalhador> trabalhadores) {
 
-        for (Trabalhador trabalhador : trabalhadores) {
-            double bruto = trabalhador.getBruto();
-            if (bruto < trabalhador.getTeto()) {
-                for (Bolo bolo : bolos) {
-                    if (trabalhador.getTrabalho().equals(bolo)) {
-                        double adicional = bolo.getAcumuladoParaDivisao() * trabalhador.getPercentualTrabalho();
-                        if (bruto + adicional > trabalhador.getTeto()) {
-                            trabalhador.setBruto(trabalhador.getTeto());
-                            bolo.addRetiradaAuxiliar(trabalhador.getTeto());
-                            break;
-                        } else {
-                            trabalhador.addBruto(adicional);
-                            bolo.addRetiradaAuxiliar(adicional);
-                        }
-                    }
-                }
-            }
-        }
-        for (Bolo bolo : bolos) {
-            bolo.subtraiDoAcumuladoParaDivisao(bolo.getRetiradaAuxiliar());
-            bolo.setRetiradaAuxiliar(0);
-        }
+        trabalhadores.stream()
+                .filter(t -> t.getBruto() < t.getTeto())
+                .forEach(t -> {
+                    bolos.stream()
+                            .filter(b -> t.getTrabalho().equals(b))
+                            .forEach(b -> incluiAdicionalAoBruto(t, b));
+                });
+
+        atualizaAcumuladoParaDivisao(bolos);
     }
 
     /**
-     * Transfere do bolo da cidade FINANCIADORA para o trabalhador, de acordo ccm o percentual;
+     * Transfere do bolo da cidade FINANCIADORA para o trabalhador, de acordo ccm o
+     * percentual;
      * calculado para o trabalhador
      * 
      * @param bolos
      * @param trabalhadores
      */
     private void transfereDoBoloDaCidadeFINANCIADORAParaTrabalhador(List<Bolo> bolos, List<Trabalhador> trabalhadores) {
-        for (Trabalhador trabalhador : trabalhadores) {
-            double bruto = trabalhador.getBruto();
-            if (bruto < trabalhador.getTeto()) {
-                for (Bolo bolo : bolos) {
-                    if (trabalhador.getFonte().equals(bolo)) {
-                        double adicional = bolo.getAcumuladoParaDivisao() * trabalhador.getPercentualFonte();
-                        if (bruto + adicional > trabalhador.getTeto()) {
-                            trabalhador.setBruto(trabalhador.getTeto());
-                            bolo.addRetiradaAuxiliar(trabalhador.getTeto());
-                            break;
-                        } else {
-                            trabalhador.addBruto(adicional);
-                            bolo.addRetiradaAuxiliar(adicional);
-                        }
-                    }
-                }
-            }
-        }
-        for (Bolo bolo : bolos) {
+
+        trabalhadores.stream()
+                .filter(t -> t.getBruto() < t.getTeto())
+                .forEach(t -> {
+                    bolos.stream()
+                            .filter(b -> t.getFonte().equals(b))
+                            .forEach(b -> incluiAdicionalAoBruto(t, b));
+                });
+
+        atualizaAcumuladoParaDivisao(bolos);
+    }
+
+    /**
+     * Atualiza o acumulado de cada bolo.
+     * 
+     * O acumulado do bolo é atualizado somente depois que todos os trabalhadores
+     * tiverem o bruto calculado, garantindo a participação correta dos percentuais
+     * dos trabalhadores
+     * 
+     * @param bolos the list of bolos to update the accumulated value for
+     */
+    private void atualizaAcumuladoParaDivisao(List<Bolo> bolos) {
+        bolos.forEach(bolo -> {
             bolo.subtraiDoAcumuladoParaDivisao(bolo.getRetiradaAuxiliar());
             bolo.setRetiradaAuxiliar(0);
+        });
+    }
+
+    private void incluiAdicionalAoBruto(Trabalhador t, Bolo b) {
+        double adicional = b.getAcumuladoParaDivisao() * t.getPercentualFonte();
+        if (t.getBruto() + adicional > t.getTeto()) {
+            t.setBruto(t.getTeto());
+            b.addRetiradaAuxiliar(t.getTeto());
+        } else {
+            t.addBruto(adicional);
+            b.addRetiradaAuxiliar(adicional);
         }
     }
 
@@ -192,34 +201,23 @@ public class SalarioService {
     private void calculaSalarioLiquido(List<Trabalhador> trabalhadores) {
         double recolhimentoEscritorio = 0.12;
 
-        for (Trabalhador trabalhador : trabalhadores) {
+        trabalhadores.forEach(trabalhador -> {
             trabalhador.setLiquido(trabalhador.getBruto() * (1 - recolhimentoEscritorio));
-        }
+        });
     }
 
     public double calculaSalarioTotalMaisAcumulado(List<Trabalhador> trabalhadores) {
-
-        double total = 0;
-        for (Trabalhador trabalhador : trabalhadores) {
-            total += trabalhador.getBruto() + trabalhador.getAcumuladoMesSeguinte();
-            // System.out.println("bruto: " + String.format("%.2f", trabalhador.getBruto())
-            // + ", acumulado: "
-            // + String.format("%.2f", trabalhador.getAcumuladoMesSeguinte()) + ", nome: "
-            // + trabalhador.getNome());
-        }
+        double total = trabalhadores.stream()
+                .mapToDouble(t -> t.getBruto() + t.getAcumuladoMesSeguinte())
+                .sum();
         return total;
     }
 
     public double calculaEntradaTotal(List<Doacao> doacoes) {
 
-        double total = 0;
-        for (Doacao doacao : doacoes) {
-            total += doacao.getValor();
-            // System.out.println(
-            // "doacao: " + String.format("%.2f", doacao.getValor()) + " " +
-            // doacao.getRecebedor().getNome());
-        }
+        double total = doacoes.stream()
+                .mapToDouble(d -> d.getValor())
+                .sum();
         return total;
     }
-
 }
