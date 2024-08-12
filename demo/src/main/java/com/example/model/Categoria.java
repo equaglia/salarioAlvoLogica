@@ -1,11 +1,11 @@
 package com.example.model;
 
-public enum CategoriaTrabalho {
+public enum Categoria {
     INTEGRAL("Integral"),
     PARCIAL("Parcial"),
     BOLSISTA("Bolsista");
 
-    CategoriaTrabalho(String string) {
+    Categoria(String string) {
     }
 
 }

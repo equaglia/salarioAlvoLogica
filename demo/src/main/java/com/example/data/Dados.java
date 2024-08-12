@@ -3,7 +3,7 @@ package com.example.data;
 import java.util.List;
 
 import com.example.model.Bolo;
-import com.example.model.CategoriaTrabalho;
+import com.example.model.Categoria;
 import com.example.model.Doacao;
 import com.example.model.Trabalhador;
 
@@ -19,19 +19,20 @@ public class Dados {
 
     public static List<Trabalhador> getTrabalhadores(List<Bolo> bolos) {
         return List.of(
-                new Trabalhador("Joaquim", CategoriaTrabalho.INTEGRAL, 4000, 0, bolos.get(0), bolos.get(1)) // 0
-                , new Trabalhador("Carlos", CategoriaTrabalho.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1)) // 1
-                , new Trabalhador("Mônica", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(1), bolos.get(1)) // 2
-                , new Trabalhador("Maria", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(0), bolos.get(0)) // 3
-                , new Trabalhador("Manoel", CategoriaTrabalho.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1)) // 4
-                , new Trabalhador("Cesar", CategoriaTrabalho.PARCIAL, 2000, 0, bolos.get(1), bolos.get(0))  // 5
-                , new Trabalhador("Jorge", CategoriaTrabalho.INTEGRAL, 4000, 0, bolos.get(2), bolos.get(2)) // 6
-                , new Trabalhador("Sara", CategoriaTrabalho.PARCIAL, 2000, 0, bolos.get(2), bolos.get(2))   // 7
-                , new Trabalhador("Miguel", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(2), bolos.get(2)) // 8
-                , new Trabalhador("Iago", CategoriaTrabalho.INTEGRAL, 4000, 0, bolos.get(0), bolos.get(0)) // 9
-                , new Trabalhador("Lucas", CategoriaTrabalho.PARCIAL, 2000, 0, bolos.get(0), bolos.get(0)) // 10
-                , new Trabalhador("Sílvio", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(2), bolos.get(2)) // 11
-                , new Trabalhador("Vanda", CategoriaTrabalho.BOLSISTA, 1000, 1000, bolos.get(1), bolos.get(1)) // 12
+                new Trabalhador("Joaquim", Categoria.INTEGRAL, 4000, 0, bolos.get(0), bolos.get(1), 100) // 0
+                , new Trabalhador("Carlos", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1), 30000) // 1
+                , new Trabalhador("Mônica", Categoria.BOLSISTA, 1000, 1000, bolos.get(1), bolos.get(1), 0) // 2
+                , new Trabalhador("Maria", Categoria.BOLSISTA, 1000, 1000, bolos.get(0), bolos.get(0), 0) // 3
+                , new Trabalhador("Manoel", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1), 1250) // 4
+                // , new Trabalhador("Manoel", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1), 3000) // 4
+                , new Trabalhador("Cesar", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(0), 0)  // 5
+                , new Trabalhador("Jorge", Categoria.INTEGRAL, 4000, 0, bolos.get(2), bolos.get(2), 0) // 6
+                , new Trabalhador("Sara", Categoria.PARCIAL, 2000, 0, bolos.get(2), bolos.get(2), 0)   // 7
+                , new Trabalhador("Miguel", Categoria.BOLSISTA, 1000, 1000, bolos.get(2), bolos.get(2), 0) // 8
+                , new Trabalhador("Iago", Categoria.INTEGRAL, 4000, 0, bolos.get(0), bolos.get(0), 0) // 9
+                , new Trabalhador("Lucas", Categoria.PARCIAL, 2000, 0, bolos.get(0), bolos.get(0), 0) // 10
+                , new Trabalhador("Sílvio", Categoria.BOLSISTA, 1000, 1000, bolos.get(2), bolos.get(2), 0) // 11
+                , new Trabalhador("Vanda", Categoria.BOLSISTA, 1000, 1000, bolos.get(1), bolos.get(1), 500) // 12
                 );
     }
 

@@ -13,7 +13,7 @@ public class Main {
 
  
         // SalarioService contém a maior parte da lógica de negócio
-        SalarioService salarioService = new SalarioService();
+        SalarioService service = new SalarioService();
 
  
         // Dados contém os dados de entrada simulados, com base nas entidades Bolo, Trabalhador e Doação
@@ -23,7 +23,7 @@ public class Main {
 
  
         // Aqui a mágica acontece, o sistema calcula os salários dos trabalhadores
-        salarioService.calculaSalarios(doacoes, bolos, trabalhadores);
+        service.calculaSalarios(doacoes, bolos, trabalhadores);
         System.out.println();
         
  
@@ -33,14 +33,32 @@ public class Main {
         }
         System.out.println();
         
-        double totalSalario = salarioService.calculaSalarioTotalMaisAcumulado(trabalhadores);
+        double totalSalario = service.calculaSalarioTotalMaisAcumulado(trabalhadores);
         System.out.println("Salario total: " + String.format("%.2f", totalSalario));
         System.out.println();
         
-        double totalEntrada = salarioService.calculaEntradaTotal(doacoes);
+        double totalEntrada = service.calculaEntradaTotal(doacoes);
         System.out.println("Entrada total: " + String.format("%.2f", totalEntrada));
         System.out.println();
         System.out.println("Sobra: Entrada total - Salario total = " + String.format("%.2f", (totalEntrada - totalSalario)));
+        System.out.println();
+        double estava = service.somaEstavaAcumulado(trabalhadores);
+        double ficou = service.somaFicouAcumulado(trabalhadores);
+        double entrou = service.somaEntrou(doacoes);
+        double saiu = service.somaSaiu(trabalhadores);
+        System.out.println("Entrou: " + String.format("%.2f", entrou));
+        System.out.println("Estava acumulado: " + String.format("%.2f", estava));
+        System.out.println("Entrou + Estava = " + String.format("%.2f", (entrou+estava)));
+        System.out.println();
+        System.out.println("Acumulado para o mês seguinte: " + String.format("%.2f", ficou));
+        System.out.println("Saiu: " + String.format("%.2f", saiu));
+        System.out.println("Saiu + Acumulou = " + String.format("%.2f", (saiu+ficou)));
+        System.out.println();
+        System.out.println("(Entrou + Estava) - (Acumulou + Saida) = " + String.format("%.2f", ((entrou+estava) - (ficou+saiu))));
+
+
+
+
 
     }
 }

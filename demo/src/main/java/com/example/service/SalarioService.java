@@ -6,12 +6,16 @@ import com.example.model.Bolo;
 import com.example.model.Doacao;
 import com.example.model.Trabalhador;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@AllArgsConstructor
+@Getter
 public class SalarioService {
 
+    private double totalAcumuladoMesAnterior = 0;
+
     public void calculaSalarios(List<Doacao> doacoes, List<Bolo> bolos, List<Trabalhador> trabalhadores) {
+
+        totalAcumuladoMesAnterior = calculaAcumuladoTotal(trabalhadores);
 
         direcionaDoacoesAosRecebedores(doacoes);
 
@@ -24,6 +28,26 @@ public class SalarioService {
         transfereDoBoloDaCidadeFINANCIADORAParaTrabalhador(bolos, trabalhadores);
 
         calculaSalarioLiquido(trabalhadores);
+    }
+
+    /**
+     * Calcula o acumulado total de todos os trabalhadores antes das entradas das doações
+     * 
+     * Calculo utilizado para conferencia do fluxo de caixa
+     * 
+     * @param trabalhadores
+     * @return
+     */
+    private double calculaAcumuladoTotal(List<Trabalhador> trabalhadores) {
+        double total = trabalhadores.stream()
+                .filter(t -> t.getAcumuladoMesSeguinte() > 0)
+                .mapToDouble(Trabalhador::getAcumuladoMesSeguinte)
+                .sum();
+        total += trabalhadores.stream()
+                .filter(t -> t.getBruto() > 0) 
+                .mapToDouble(Trabalhador::getBruto)
+                .sum();
+        return total;
     }
 
     /**
@@ -216,8 +240,35 @@ public class SalarioService {
     public double calculaEntradaTotal(List<Doacao> doacoes) {
 
         double total = doacoes.stream()
-                .mapToDouble(d -> d.getValor())
+                .mapToDouble(Doacao::getValor)
+                // .mapToDouble(d -> {
+                // System.out.println(d.getValor());
+                // return d.getValor();})
                 .sum();
-        return total;
+        return total + totalAcumuladoMesAnterior;
+    }
+
+    public double somaEntrou(List<Doacao> doacoes) {
+        return doacoes.stream()
+                .mapToDouble(Doacao::getValor)
+                .sum();
+    }
+
+    public double somaEstavaAcumulado(List<Trabalhador> trabalhadores) {
+        return trabalhadores.stream()
+                .mapToDouble(Trabalhador::getEstavaAcumulado)
+                .sum();
+    }
+
+    public double somaFicouAcumulado(List<Trabalhador> trabalhadores) {
+        return trabalhadores.stream()
+                .mapToDouble(Trabalhador::getAcumuladoMesSeguinte)
+                .sum();
+    }
+
+    public double somaSaiu(List<Trabalhador> trabalhadores) {
+        return trabalhadores.stream()
+                .mapToDouble(Trabalhador::getBruto)
+                .sum();
     }
 }

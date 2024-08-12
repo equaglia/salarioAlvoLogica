@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Trabalhador extends Recebedor {
-    private CategoriaTrabalho categoria;
+    private Categoria categoria;
     private double teto;
     private double minimo;
     private Bolo fonte;
@@ -15,14 +15,23 @@ public class Trabalhador extends Recebedor {
     private double percentualTrabalho = 0;
     private double acumuladoMesSeguinte = 0;
     private double liquido = 0;
+    private double estavaAcumulado = 0;
 
-    public Trabalhador(String nome, CategoriaTrabalho categoria, double teto, double minimo, Bolo fonte, Bolo trabalho) {
+    public Trabalhador(String nome, Categoria categoria, double teto, double minimo, Bolo fonte, Bolo trabalho, double acumulado) {
         super(nome);
         this.categoria = categoria;
         this.teto = teto;
         this.minimo = minimo;
         this.fonte = fonte;
         this.trabalho = trabalho;
+        this.estavaAcumulado = acumulado;
+        addBruto(acumulado);
+        // if (acumulado > teto) {
+        //     setBruto(teto);
+        //     addAcumuladoMesSeguinte(acumulado - teto);
+        // } else {
+        //     addBruto(acumulado);
+        // }
     }
 
     @Override
