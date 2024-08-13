@@ -13,25 +13,19 @@ public class Trabalhador extends Recebedor {
     private double percentualFonte = 0;
     private Bolo trabalho;
     private double percentualTrabalho = 0;
+    private double acumuladoMesAnterior = 0;
     private double acumuladoMesSeguinte = 0;
     private double liquido = 0;
-    private double estavaAcumulado = 0;
 
-    public Trabalhador(String nome, Categoria categoria, double teto, double minimo, Bolo fonte, Bolo trabalho, double acumulado) {
+    public Trabalhador(String nome, Categoria categoria, double teto, double minimo, Bolo fonte, Bolo trabalho,
+            double acumulado) {
         super(nome);
         this.categoria = categoria;
         this.teto = teto;
         this.minimo = minimo;
         this.fonte = fonte;
         this.trabalho = trabalho;
-        this.estavaAcumulado = acumulado;
-        addBruto(acumulado);
-        // if (acumulado > teto) {
-        //     setBruto(teto);
-        //     addAcumuladoMesSeguinte(acumulado - teto);
-        // } else {
-        //     addBruto(acumulado);
-        // }
+        this.acumuladoMesAnterior = acumulado;
     }
 
     @Override
@@ -63,10 +57,13 @@ public class Trabalhador extends Recebedor {
 
     @Override
     public String toString() {
-        String resultado = "fonte: (" + fonte.getNome() + ", " + String.format("%.2f%%", getPercentualFonte() *100)
-                + ") , atua: (" + trabalho.getNome() + ", " + String.format("%.2f%%", getPercentualTrabalho() *100) + "),"
-                + super.toString() + ", líquido: " + String.format("%.2f", getLiquido()) + ", MesSeguinte: " + String.format("%.2f", acumuladoMesSeguinte)
-                + ", " + categoria + ", teto: " + String.format("%.2f", teto) + ", min: " + String.format("%.2f", minimo);
+        String resultado = "fonte: (" + fonte.getNome() + ", " + String.format("%.2f%%", getPercentualFonte() * 100)
+                + ") , atua: (" + trabalho.getNome() + ", " + String.format("%.2f%%", getPercentualTrabalho() * 100)
+                + "),"
+                + super.toString() + ", líquido: " + String.format("%.2f", getLiquido()) + ", MesSeguinte: "
+                + String.format("%.2f", acumuladoMesSeguinte)
+                + ", " + categoria + ", teto: " + String.format("%.2f", teto) + ", min: "
+                + String.format("%.2f", minimo);
 
         return resultado;
     }

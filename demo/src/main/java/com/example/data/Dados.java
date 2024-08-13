@@ -23,8 +23,8 @@ public class Dados {
                 , new Trabalhador("Carlos", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1), 30000) // 1
                 , new Trabalhador("Mônica", Categoria.BOLSISTA, 1000, 1000, bolos.get(1), bolos.get(1), 0) // 2
                 , new Trabalhador("Maria", Categoria.BOLSISTA, 1000, 1000, bolos.get(0), bolos.get(0), 0) // 3
-                , new Trabalhador("Manoel", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1), 1250) // 4
-                // , new Trabalhador("Manoel", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1), 3000) // 4
+                // , new Trabalhador("Manoel", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1), 1251) // 4
+                , new Trabalhador("Manoel", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(1), 3000) // 4
                 , new Trabalhador("Cesar", Categoria.PARCIAL, 2000, 0, bolos.get(1), bolos.get(0), 0)  // 5
                 , new Trabalhador("Jorge", Categoria.INTEGRAL, 4000, 0, bolos.get(2), bolos.get(2), 0) // 6
                 , new Trabalhador("Sara", Categoria.PARCIAL, 2000, 0, bolos.get(2), bolos.get(2), 0)   // 7

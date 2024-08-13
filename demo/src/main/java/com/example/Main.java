@@ -33,15 +33,6 @@ public class Main {
         }
         System.out.println();
         
-        double totalSalario = service.calculaSalarioTotalMaisAcumulado(trabalhadores);
-        System.out.println("Salario total: " + String.format("%.2f", totalSalario));
-        System.out.println();
-        
-        double totalEntrada = service.calculaEntradaTotal(doacoes);
-        System.out.println("Entrada total: " + String.format("%.2f", totalEntrada));
-        System.out.println();
-        System.out.println("Sobra: Entrada total - Salario total = " + String.format("%.2f", (totalEntrada - totalSalario)));
-        System.out.println();
         double estava = service.somaEstavaAcumulado(trabalhadores);
         double ficou = service.somaFicouAcumulado(trabalhadores);
         double entrou = service.somaEntrou(doacoes);
@@ -55,10 +46,5 @@ public class Main {
         System.out.println("Saiu + Acumulou = " + String.format("%.2f", (saiu+ficou)));
         System.out.println();
         System.out.println("(Entrou + Estava) - (Acumulou + Saida) = " + String.format("%.2f", ((entrou+estava) - (ficou+saiu))));
-
-
-
-
-
     }
 }

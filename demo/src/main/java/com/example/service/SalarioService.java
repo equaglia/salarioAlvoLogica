@@ -15,7 +15,7 @@ public class SalarioService {
 
     public void calculaSalarios(List<Doacao> doacoes, List<Bolo> bolos, List<Trabalhador> trabalhadores) {
 
-        totalAcumuladoMesAnterior = calculaAcumuladoTotal(trabalhadores);
+        transfereDoMesAnteriorParaBruto(trabalhadores);
 
         direcionaDoacoesAosRecebedores(doacoes);
 
@@ -30,24 +30,8 @@ public class SalarioService {
         calculaSalarioLiquido(trabalhadores);
     }
 
-    /**
-     * Calcula o acumulado total de todos os trabalhadores antes das entradas das doações
-     * 
-     * Calculo utilizado para conferencia do fluxo de caixa
-     * 
-     * @param trabalhadores
-     * @return
-     */
-    private double calculaAcumuladoTotal(List<Trabalhador> trabalhadores) {
-        double total = trabalhadores.stream()
-                .filter(t -> t.getAcumuladoMesSeguinte() > 0)
-                .mapToDouble(Trabalhador::getAcumuladoMesSeguinte)
-                .sum();
-        total += trabalhadores.stream()
-                .filter(t -> t.getBruto() > 0) 
-                .mapToDouble(Trabalhador::getBruto)
-                .sum();
-        return total;
+    private void transfereDoMesAnteriorParaBruto(List<Trabalhador> trabalhadores) {
+        trabalhadores.forEach(t -> t.setBruto(t.getAcumuladoMesAnterior()));
     }
 
     /**
@@ -206,11 +190,20 @@ public class SalarioService {
         });
     }
 
+    /**
+     * Adiciona o adicional ao bruto de acordo com o percentual de cada trabalhador
+     * 
+     * Garante que o bruto do trabalhador não ultrapassa o teto
+     * 
+     * @param t
+     * @param b
+     */
     private void incluiAdicionalAoBruto(Trabalhador t, Bolo b) {
         double adicional = b.getAcumuladoParaDivisao() * t.getPercentualFonte();
         if (t.getBruto() + adicional > t.getTeto()) {
+            double transfere = t.getTeto() - t.getBruto();
             t.setBruto(t.getTeto());
-            b.addRetiradaAuxiliar(t.getTeto());
+            b.addRetiradaAuxiliar(transfere);
         } else {
             t.addBruto(adicional);
             b.addRetiradaAuxiliar(adicional);
@@ -230,42 +223,48 @@ public class SalarioService {
         });
     }
 
-    public double calculaSalarioTotalMaisAcumulado(List<Trabalhador> trabalhadores) {
-        double total = trabalhadores.stream()
-                .mapToDouble(t -> t.getBruto() + t.getAcumuladoMesSeguinte())
-                .sum();
-        return total;
-    }
-
-    public double calculaEntradaTotal(List<Doacao> doacoes) {
-
-        double total = doacoes.stream()
-                .mapToDouble(Doacao::getValor)
-                // .mapToDouble(d -> {
-                // System.out.println(d.getValor());
-                // return d.getValor();})
-                .sum();
-        return total + totalAcumuladoMesAnterior;
-    }
-
+    /**
+     * Soma o valor de todas as doações (entrada total)
+     * 
+     * @param doacoes
+     * @return
+     */
     public double somaEntrou(List<Doacao> doacoes) {
         return doacoes.stream()
                 .mapToDouble(Doacao::getValor)
                 .sum();
     }
 
+    /**
+     * Soma o "valor acumulado do mês anterior" dos trabalhadores (acumulado do mês anterior)
+     * 
+     * @param trabalhadores
+     * @return
+     */
     public double somaEstavaAcumulado(List<Trabalhador> trabalhadores) {
         return trabalhadores.stream()
-                .mapToDouble(Trabalhador::getEstavaAcumulado)
+                .mapToDouble(Trabalhador::getAcumuladoMesAnterior)
                 .sum();
     }
 
+    /**
+     * Soma o "valor acumulado para o mês seguinte" dos trabalhadores (acumulado para o mês seguinte)
+     * 
+     * @param trabalhadores
+     * @return
+     */
     public double somaFicouAcumulado(List<Trabalhador> trabalhadores) {
         return trabalhadores.stream()
                 .mapToDouble(Trabalhador::getAcumuladoMesSeguinte)
                 .sum();
     }
 
+    /**
+     * Soma o bruto dos trabalhadores (saída total)
+     *
+     * @param trabalhadores
+     * @return
+     */
     public double somaSaiu(List<Trabalhador> trabalhadores) {
         return trabalhadores.stream()
                 .mapToDouble(Trabalhador::getBruto)
