@@ -43,15 +43,45 @@ public class Trabalhador extends Recebedor {
         acumuladoMesSeguinte += valor;
     }
 
+    /**
+     * Calcula o percentual do trabalhador no bolo trabalho
+     * 
+     * Calcula a divisão do que falta para o trabalhador completar o teto e o valor de todos os trabalhadores que participam nesse bolo de trabalho
+     * 
+     * ex. este trabalhador: bruto = 1000, teto = 2000, falta = 1000
+     * todos os trabalhadores que participam do bolo de trabalho: 
+     *  - trab1: bruto = 1000, teto = 4000, falta = 3000
+     *  - trab2: bruto = 1000, teto = 4000, falta = 3000    
+     *  - trab3: bruto = 1000, teto = 4000, falta = 3000 
+     *  - este trabalhador: bruto = 1000, teto = 2000, falta = 1000
+     * 
+     * Total que falta somando os 4 trabalhadores: 3000 + 3000 + 3000 + 1000 = 10.000
+     * 
+     *  - trab1: bruto = 1000, teto = 4000, falta = 3000 porcentagem = 10.000 / 3000 = 30%
+     *  - trab2: bruto = 1000, teto = 4000, falta = 3000 porcentagem = 10.000 / 3000 = 30%
+     *  - trab3: bruto = 1000, teto = 4000, falta = 3000 porcentagem = 10.000 / 3000 = 30%
+     *  - este trabalhador: bruto = 1000, teto = 2000, falta = 1000 porcentagem = 10.000 / 1000 = 10%
+     * 
+     * registra no atributo "percentualTrabalho"
+     * 
+     * @param valor
+     */
     public void setPercentualTrabalho(double valor) {
         if (valor > 0) {
-            percentualTrabalho = (double) (this.teto - getBruto()) / valor;
+            this.percentualTrabalho = (double) (this.teto - getBruto()) / valor;
         }
     }
 
+    /**
+     * Calcula o percentual do trabalhador no bolo fonte
+     * 
+     * É o mesmo que o percentual do trabalhador no bolo trabalho, mas registra no atributo "percentualFonte"
+     * 
+     * @param valor
+     */
     public void setPercentualFonte(double valor) {
         if (valor > 0) {
-            percentualFonte = (double) (this.teto - getBruto()) / valor;
+            this.percentualFonte = (double) (this.teto - getBruto()) / valor;
         }
     }
 

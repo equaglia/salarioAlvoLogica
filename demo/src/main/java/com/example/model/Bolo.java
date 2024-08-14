@@ -32,15 +32,25 @@ public class Bolo extends Recebedor {
         acumuladoParaDivisao += valor;
     }
 
+    /**
+     * Calcula o percentual de cada trabalhador em cada bolo
+     * 
+     * Calcula o que falta para completar o teto do trabalhador (faltaParaCompletar)
+     * Calcula a soma desse valor que falta, de todos os trabalhadores participantes do bolo,
+     * guardando na variável acumuladoTetoTrabalho e acumuladoTetoFonte. Esses acumulados são
+     * passados para a classe trabalhador
+     * 
+     * @param trabalhadores
+     */
     public void calculaPercentual(List<Trabalhador> trabalhadores) {
         for (Trabalhador trabalhador : trabalhadores) {
+            double faltaParaCompletar = trabalhador.getTeto() - trabalhador.getBruto();
+
             if (trabalhador.getTrabalho().equals(this)) {
-                acumuladoTetoTrabalho += trabalhador.getTeto() - trabalhador.getBruto();
-                // System.out.println("acumuladoTetoTrabalho: " + acumuladoTetoTrabalho);
+                this.acumuladoTetoTrabalho += faltaParaCompletar;
             }
             if (trabalhador.getFonte().equals(this)) {
-                acumuladoTetoFonte += trabalhador.getTeto() - trabalhador.getBruto();
-                // System.out.println("acumuladoTetoFonte: " + acumuladoTetoFonte);
+                this.acumuladoTetoFonte += faltaParaCompletar;
             }
         }
         for (Trabalhador trabalhador : trabalhadores) {
